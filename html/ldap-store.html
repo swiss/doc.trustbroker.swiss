@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.22">
-<title>API and Protocols</title>
+<title>LDAP Store</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -436,131 +436,214 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article">
 <div id="header">
-<h1>API and Protocols</h1>
+<h1>LDAP Store</h1>
 <div class="details">
 <span id="revnumber">version 1.13.0.20260306T105516Z</span>
 </div>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
-<p>XTB provides various endpoints for SAML and OIDC federation handling and has a small single page application for the parts that require user interaction.</p>
+<p>The LDAP store is a component in the open-source to retrieve attributes from an LDAP server.</p>
 </div>
 <div class="paragraph">
-<p>These features are provided based on:</p>
+<p>It allows chained queries so that an attribute from any previous query can be used in the following one.</p>
+</div>
+<div class="paragraph">
+<p>If no claim selection are configured in the IDMQuery for the LDAP Store, all attributes will be fetched.</p>
+</div>
+<div class="paragraph">
+<p>Known limitations:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>XTB SAML implementation using
-<a href="https://shibboleth.atlassian.net/wiki/spaces/OSAML">OpenSAML</a></p>
-</li>
-<li>
-<p>XTB OIDC integration using a sub-set of the features of
-<a href="https://docs.spring.io/spring-authorization-server/reference/overview.html#feature-list">Spring Authorization Server</a></p>
-</li>
-<li>
-<p>XTB application using angular to provide the user interaction UI</p>
+<p>this plugin can only connect to one LDAP server</p>
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configuration">Configuration</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_parameters">Parameters</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
-<col style="width: 8.3333%;">
-<col style="width: 8.3333%;">
-<col style="width: 83.3334%;">
+<col style="width: 18.1818%;">
+<col style="width: 36.3636%;">
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 9.0909%;">
+<col style="width: 18.1819%;">
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Path</th>
-<th class="tableblock halign-left valign-top">Protocol</th>
-<th class="tableblock halign-left valign-top">Purpose</th>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+<th class="tableblock halign-left valign-top">Location</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Values</th>
+<th class="tableblock halign-left valign-top">Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/v1/saml/metadata</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML metadata endpoint providing
-<a href="http://docs.oasis-open.org/security/saml/v2.0/saml-metadata-2.0-os.pdf">Metadata for the OASIS Security Assertion Markup Language (SAML) V2.0</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.urls</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">url to connect to the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ldaps://localhost:636</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/v1/saml</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML login/logout endpoint handling
-<a href="http://docs.oasis-open.org/security/saml/Post2.0/sstc-saml-tech-overview-2.0-cd-02.html#5.1.2.SP-Initiated%20SSO:%20%20Redirect/POST%20Bindings">SP-Initiated SSO: Redirect/POST Bindings</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">base DN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dc=trustbroker,dc=swiss</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/api/v1/saml/arp</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SAML artifact binding resolution endpoint</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.usename</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">username used to query the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">uid=admin,ou=system</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/.well-known/openid-configuration</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">REST</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC meta data endpoint for <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig">Obtaining OpenID provider
-configuration information</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">password used to query the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">password</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/oauth2/authorize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON web token authorization code flow starting point defined by <a href="https://openid.net/specs/openid-connect-core-1_0" class="bare">https://openid.net/specs/openid-connect-core-1_0</a>
-.html#AuthorizationEndpoint[OpenID Connect Authorization Endpoint]</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables LDAP Plugin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true / false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/oauth2/token</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON web token retrieval endpoint defined by <a href="https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint">OpenID Connect
-Token endpoint</a>. Used to retrieve tokens using authorization codes or refresh_token.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>appFilter</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Query filter for LDAP Query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProfileRP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">(&amp;(app=app1)(|(uid=${IDM:QueryName:uid})(mail=${mail}))</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/oauth2/jwks</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">JSON Web Key endpoint serving key sets (rotated weekly) required for token signature verification.
-See <a href="https://datatracker.ietf.org/doc/html/rfc7517">rfc7517</a> for details.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subResource</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Search base for LDAP Query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProfileRP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">dc=users</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/oauth2/introspect</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows to to validate posted access token retrieving it&#8217;s data payload.
-See <a href="https://datatracker.ietf.org/doc/html/rfc7662">rfc7662</a> for details.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>attributes selection</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Attributes to retrieve from the LDAP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProfileRP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XML UserDetailsSelection.Definition</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Values must exist in the LDAP&#8217;s Person</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mail, givenName, uid</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/oauth2/revoke</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Discard tokens from the XTB token cache.
-See <a href="https://datatracker.ietf.org/doc/html/rfc7009">rfc7009</a> for details.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/userinfo</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Provides insights into the HTTP bearer token posted in the HTTP Authorization header or the access_token POST body.
-See <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">OpenID COnnect UserInfo Endpoint</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/logout</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OIDC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Allows user-agents to do a
-<a href="https://openid.net/specs/openid-connect-frontchannel-1_0.html">OpenID Connect Front-Channel Logout</a>.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/app</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Web</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Single page applications for user interactions (home realm discovery and error handling mainly)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/app/sso</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Web</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SSO login status page for testing. Can be used to check and kill SSO own sessions.
-Limitations: OIDC session members are visible here too but only when SSO is used and terminating SSO session here does not
-invalidate OIDC tokens.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>store</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selection of store for the IDM Query</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ProfileRP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XML IDMLookup.IDMQuery</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LDAP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LDAP</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<div class="sect2">
+<h3 id="_chained_query">Chained query</h3>
+<div class="paragraph">
+<p>To use chained query configure the LDAP&#8217;s "AppFilter" with the claim of a previous IDM query (example: <code>IDM:&lt;query_name&gt;:&lt;definition_name&gt;</code> as in <code>IDM:IDENTITY:uid</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_identity_selection">Identity Selection</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>When the LDAP plugin retrieves multiple identities from the store, an Identity Selection can be triggered.</p>
+</div>
+<div class="paragraph">
+<p>Additional information can be displayed to the user, to help choosing the Identity.
+Any additional information can be used (most probably LDAP attributes).</p>
+</div>
+<div class="sect2">
+<h3 id="_parameters_2">Parameters</h3>
+<div class="paragraph">
+<p>In the SetupRP, section <code>ProfileSelection</code>.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 33.3333%;">
+<col style="width: 11.1111%;">
+<col style="width: 11.1111%;">
+<col style="width: 22.2223%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter</th>
+<th class="tableblock halign-left valign-top">Meaning</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Values</th>
+<th class="tableblock halign-left valign-top">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enabled</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enables the Profile Selection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true / false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">handler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">needs to be explicitly specified to pick the LDAP Identity Selection handler</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LDAP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">LDAP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">profileSelector</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">claim to look for multiple identities. Has to be an LDAP claim, and unique.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mail, uid, ..</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">mail</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">additionalInfo</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">additional attributes to display to the user on Identity Selection</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">List of Strings</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memberof, uid, ..</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">memberof,uid,org</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 1.13.0.20260306T105516Z<br>
-Last updated 2026-01-07 15:34:48 +0100
+Last updated 2026-02-26 14:12:00 +0100
 </div>
 </div>
 </body>
