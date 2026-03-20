@@ -35,7 +35,7 @@ the [eCH standards](https://www.ech.ch/de/standard-uebersicht) around IAM.
 ## Configuration
 
 The configuration is based on XML-files which are retrieved periodically from git repository at run time.
-If you want to know more, please consult [Configuration.md]()
+If you want to know more, please consult [Configuration](https://swiss.github.io/trustbroker.swiss/html/#_configuration).
 
 ## Features not published as OSS
 
