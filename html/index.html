@@ -438,7 +438,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>trustbroker.swiss (XTB)</h1>
 <div class="details">
-<span id="revnumber">version 1.13.0.20260306T105516Z</span>
+<span id="revnumber">version 1.13.0.20260317T170552Z</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -826,7 +826,7 @@ Requirements:</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker-samlmock</code> simulating a SAML RP and CP to play around with.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">RP entry points: <a href="http://localhost:7070" class="bare">http://localhost:7070</a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Mock service simulating RP and CP messages based on the <code>xtb-gitops-demo/trustbroker-samlmock data</code> to play around with the setup.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mock service simulating RP and CP messages based on the <code>gitops.trustbroker.swiss/trustbroker-samlmock data</code> to play around with the setup.</p></td>
 </tr>
 </tbody>
 </table>
@@ -881,13 +881,13 @@ chmod 555 /usr/local/bin/docker-compose</code></pre>
 <div class="ulist">
 <ul>
 <li>
-<p>Download <a href="https://github.com/swiss/trustbroker-swiss/blob/main/trustbroker-install/docker/docker-compose.yml">docker-compose.yml</a></p>
+<p>Download <a href="https://github.com/swiss/trustbroker.swiss/blob/main/trustbroker-install/docker/docker-compose.yml">docker-compose.yml</a></p>
 </li>
 <li>
-<p>Download <a href="https://github.com/swiss/trustbroker-swiss/blob/main/trustbroker-install/env-vault.conf">env-vault.conf</a></p>
+<p>Download <a href="https://github.com/swiss/trustbroker.swiss/blob/main/trustbroker-install/env-vault.conf">env-vault.conf</a></p>
 </li>
 <li>
-<p>Download <a href="https://github.com/swiss/trustbroker-swiss/blob/main/trustbroker-install/run.sh">run.sh</a></p>
+<p>Download <a href="https://github.com/swiss/trustbroker.swiss/blob/main/trustbroker-install/run.sh">run.sh</a></p>
 </li>
 </ul>
 </div>
@@ -938,18 +938,18 @@ You can use the browser&#8217;s development tools and the SAML-tracer plugin to 
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash"># Variant 0: Run directly with the read-only public repository from GitHub
-GIT_URL=https://github.com/swiss/xtb-gitops-demo.git
+GIT_URL=https://github.com/swiss/gitops.trustbroker.swiss.git
 #GIT_TOKEN=not-required-on-public-repo
 
 # Variant 1: Access token used to access GitOps repository using http bearer token (must be created on Git server)
 # Gitea &gt;&gt; User Avater &gt;&gt; Settings &gt;&gt; Applications &gt;&gt; Manage Access Tokens &gt;&gt; Generate Token
 # Pass by value or by reference ie.e $TRUSTBROKER_HOME/keys/git_token
-#GIT_URL=http://git@gitea:3000/trustbroker-swiss/xtb-gitops-demo.git
+#GIT_URL=http://git@gitea:3000/trustbroker-swiss/gitops.trustbroker.swiss.git
 #GIT_TOKEN=./keys/git_token
 
 # Variant 2: SSH key used to access GitOps repository using ssh protocol (see setup-ssh.sh on how to get it)
 # We instead mount the SSH key(s) into /etc/trustbroker/keys.
-#GIT_URL=ssh://git@gitea:22/trustbroker-swiss/xtb-gitops-demo.git
+#GIT_URL=ssh://git@gitea:22/trustbroker-swiss/gitops.trustbroker.swiss.git
 #SSH_KEY=./keys/id_rsa
 
 # data selection from git repo selecting trustbroker-inventories/DEMO
@@ -989,7 +989,7 @@ services:
   postgresql:
     container_name: postgresql
     restart: on-failure
-    image: docker.io/library/postgres:17
+    image: docker.io/library/postgres:18
     volumes:
       - ./postgresql:/var/lib/postgresql
       - /etc/localtime:/etc/localtime:ro
@@ -1002,22 +1002,22 @@ services:
     networks:
       - trustbroker-network
 
-#  mariadb:
-#    container_name: mariadb
-#    restart: on-failure
-#    image: docker.io/library/mariadb:10.7.6
-#    volumes:
-#      - ./mariadb:/var/lib/mysql
-#      - /etc/localtime:/etc/localtime:ro
-#    ports:
-#      - "3306:3306"
-#    environment:
-#      - MYSQL_DATABASE=TBSS16
-#      - MYSQL_ROOT_PASSWORD=${STATECACHE_PASS}
-#      - MYSQL_PASSWORD=${STATECACHE_PASS}
-#      - MYSQL_USER=trustbroker
-#    networks:
-#      - trustbroker-network
+  mariadb:
+    container_name: mariadb
+    restart: on-failure
+    image: docker.io/library/mariadb:12-ubi
+    volumes:
+      - ./mariadb:/var/lib/mysql
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=TBSS16
+      - MYSQL_ROOT_PASSWORD=${STATECACHE_PASS}
+      - MYSQL_PASSWORD=${STATECACHE_PASS}
+      - MYSQL_USER=trustbroker
+    networks:
+      - trustbroker-network
 
   gitea:
     container_name: gitea
@@ -1037,7 +1037,7 @@ services:
 
   ldap:
     container_name: ldap
-    image: bitnami/openldap
+    image: osixia/openldap:stable
     ports:
       - '1389:1389'
       - '1636:1636'
@@ -1184,7 +1184,7 @@ cat ${SSH_KEY_FILE}.pub</code></pre>
 <div class="sect2">
 <h3 id="_setup_gitea_server">Setup Gitea Server</h3>
 <div class="paragraph">
-<p>For trials, you can use the Gitea server as shown in the docker-compose setup, you need to switch from the github to the gitea URL for the xtb-gitops-demo repository..</p>
+<p>For trials, you can use the Gitea server as shown in the docker-compose setup, you need to switch from the github to the gitea URL for the gitops.trustbroker.swiss repository..</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1206,7 +1206,7 @@ cat ${SSH_KEY_FILE}.pub</code></pre>
 <p>Add content of <code>ssh/id_rsa.pub</code> (and/or your own) to: User &gt;&gt; Settings &gt;&gt; SSH/PGP Keys &gt;&gt; Manage SSH Keys &gt;&gt; Add Key</p>
 </li>
 <li>
-<p>Create a repository <code>xtb-gitops-demo</code>.</p>
+<p>Create a repository <code>gitops.trustbroker.swiss</code>.</p>
 </li>
 <li>
 <p>Optional: For http access: User &gt;&gt; Settings &gt;&gt; Applications &gt;&gt; Manage Access Tokens &gt;&gt; Generate Token</p>
@@ -1226,8 +1226,8 @@ You then can add/edit/delete files in the web UI and read the repository without
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">git clone -b main https://github.com/swiss/xtb-gitops-demo.git
-cd xtb-gitops-demo</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">git clone -b main https://github.com/swiss/gitops.trustbroker.swiss.git
+cd gitops.trustbroker.swiss</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1245,7 +1245,7 @@ git commit -m "Created XTB signer" ./</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">git remote set-url origin ssh://git@localhost:222/trustbroker-swiss/xtb-gitops-demo.git
+<pre class="highlight"><code class="language-bash" data-lang="bash">git remote set-url origin ssh://git@localhost:222/trustbroker-swiss/gitops.trustbroker.swiss.git
 git push -u origin main</code></pre>
 </div>
 </div>
@@ -1254,13 +1254,13 @@ git push -u origin main</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">git remote set-url origin http://git@localhost:3000/trustbroker-swiss/xtb-gitops-demo.git
+<pre class="highlight"><code class="language-bash" data-lang="bash">git remote set-url origin http://git@localhost:3000/trustbroker-swiss/gitops.trustbroker.swiss.git
 git push</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Run the services in the directory where you stored the tweaked <code>docker-compose.yml</code> and <code>env-vault.conf</code> using the following
-<a href="https://github.com/swiss/trustbroker-swiss/trustbroker-install/docker/run.sh">run.sh</a>:</p>
+<a href="https://github.com/swiss/trustbroker.swiss/trustbroker-install/docker/run.sh">run.sh</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2036,7 +2036,7 @@ Check the scripting section for insights.</p>
 <div class="sect3">
 <h4 id="_theme_customizing">Theme Customizing</h4>
 <div class="paragraph">
-<p>See <code>xtb-gitops-demo</code> for assets and check the CSS to see if the styling of the interactive parts of XTB (usually HRD and error screen) fits your needs.</p>
+<p>See <code>gitops.trustbroker.swiss</code> for assets and check the CSS to see if the styling of the interactive parts of XTB (usually HRD and error screen) fits your needs.</p>
 </div>
 </div>
 </div>
@@ -2612,7 +2612,7 @@ They are defined in the <code>trustbroker-api</code> module.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">This AsciiDoc documentation.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>xtb-gitops-demo</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>gitops.trustbroker.swiss</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">N/A</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">GIT repository with sample XTB configuration.</p></td>
 </tr>
@@ -2693,7 +2693,7 @@ Migration use case only. We prefer you package this with your client ao we can r
 <h3 id="_license">License</h3>
 <div class="paragraph">
 <p>XTB itself is licensed under
-<a href="https://github.com/swiss/trustbroker-swiss/blob/main/LICENSE.txt">GNU AFFERO GENERAL PUBLIC LICENSE Version 3</a>.</p>
+<a href="https://github.com/swiss/trustbroker.swiss/blob/main/LICENSE.txt">GNU AFFERO GENERAL PUBLIC LICENSE Version 3</a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -2704,10 +2704,10 @@ Migration use case only. We prefer you package this with your client ao we can r
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://github.com/swiss/trustbroker.swiss/blob/main/Code-of-Conduct.md">Code of Conduct</a></p>
+<p><a href="https://github.com/swiss/doc.trustbroker.swiss/blob/main/Code-of-Conduct.md">Code of Conduct</a></p>
 </li>
 <li>
-<p><a href="https://github.com/swiss/trustbroker.swiss/blob/main/Contribution.md">Contribution</a></p>
+<p><a href="https://github.com/swiss/doc.trustbroker.swiss/blob/main/Contribution.md">Contribution</a></p>
 </li>
 </ul>
 </div>
@@ -4756,30 +4756,30 @@ Migration use case only. We prefer you package this with your client ao we can r
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-api-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-api-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unknown</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">generic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-api-1.13.0.20260306T105516Z.jar</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:a1103c5815d5b41245f47e01106b65f1a7974473b5cfeef0ad6a2fa911e9a074/trustbroker-api-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-api-1.13.0.20260317T170552Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:a1103c5815d5b41245f47e01106b65f1a7974473b5cfeef0ad6a2fa911e9a074/trustbroker-api-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-common-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-common-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache-2.0,BSD-3-Clause</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://licenses.nuget.org/Apache-2.0,http://opensource.org/licenses/BSD-3-Clause" class="bare">http://licenses.nuget.org/Apache-2.0,http://opensource.org/licenses/BSD-3-Clause</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">generic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-common-1.13.0.20260306T105516Z.jar</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:0df1d4dd68819876c8481a60534f5253258719fb55a9273c0d074ed044c3af63/trustbroker-common-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-common-1.13.0.20260317T170552Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:0df1d4dd68819876c8481a60534f5253258719fb55a9273c0d074ed044c3af63/trustbroker-common-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-service-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-service-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Apache-2.0</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://licenses.nuget.org/Apache-2.0" class="bare">http://licenses.nuget.org/Apache-2.0</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">generic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-service-1.13.0.20260306T105516Z.jar</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:e0096c2c37cf7f40c8631f8713d27654d6c1b5780bea68dae36e48b70753fbb0/trustbroker-service-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-service-1.13.0.20260317T170552Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:e0096c2c37cf7f40c8631f8713d27654d6c1b5780bea68dae36e48b70753fbb0/trustbroker-service-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -4787,17 +4787,17 @@ Migration use case only. We prefer you package this with your client ao we can r
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unknown</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">docker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-swiss/trustbroker-application:1.13.0.20260306T105516Z</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-swiss/trustbroker-application:1.13.0.20260317T170552Z</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">docker://trustbroker-swiss/trustbroker-application</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1.13.0.20260306T105516Z</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.13.0.20260317T170552Z</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-wstrust-service-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-wstrust-service-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Unknown</p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">generic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-wstrust-service-1.13.0.20260306T105516Z.jar</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:0379cb3cdc0a0e75082ea3f81d065e57d6abb49b421d36b1b72300626cf938ea/trustbroker-wstrust-service-1.13.0.20260306T105516Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">trustbroker-wstrust-service-1.13.0.20260317T170552Z.jar</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">generic://sha256:0379cb3cdc0a0e75082ea3f81d065e57d6abb49b421d36b1b72300626cf938ea/trustbroker-wstrust-service-1.13.0.20260317T170552Z.jar</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -4808,8 +4808,8 @@ Migration use case only. We prefer you package this with your client ao we can r
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.13.0.20260306T105516Z<br>
-Last updated 2026-02-26 14:12:00 +0100
+Version 1.13.0.20260317T170552Z<br>
+Last updated 2026-04-17 18:46:11 +0200
 </div>
 </div>
 </body>
