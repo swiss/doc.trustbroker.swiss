@@ -15,7 +15,7 @@ For more information how trustbroker.swiss is used see these documentations:
 
 - Swiss Government's IAM system [eIAM](https://www.eiam.swiss/)
 - Authentication service of the Swiss authorities [AGOV](https://www.agov.admin.ch)
-- Technical documentation on [GitHub](https://doc.swiss.github.io/trustbroker.swiss/html/)
+- Technical documentation on [GitHub](https://swiss.github.io/doc.trustbroker.swiss/html/)
 
 For more information regarding the fundamental principles of such services please consult
 the [eCH standards](https://www.ech.ch/de/standard-uebersicht) around IAM.
