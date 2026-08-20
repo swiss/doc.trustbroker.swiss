@@ -1,0 +1,10 @@
+swiss.trustbroker.wsfed.controller
+swiss.trustbroker.wsfed.dto
+swiss.trustbroker.wsfed.service
+swiss.trustbroker.wsfed.util
+swiss.trustbroker.wstrust.config
+swiss.trustbroker.wstrust.dto
+swiss.trustbroker.wstrust.exception
+swiss.trustbroker.wstrust.service
+swiss.trustbroker.wstrust.util
+swiss.trustbroker.wstrust.validator

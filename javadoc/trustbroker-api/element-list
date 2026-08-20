@@ -1,0 +1,15 @@
+swiss.trustbroker.api.accessrequest.dto
+swiss.trustbroker.api.accessrequest.service
+swiss.trustbroker.api.announcements.dto
+swiss.trustbroker.api.announcements.service
+swiss.trustbroker.api.homerealmdiscovery.attributes
+swiss.trustbroker.api.homerealmdiscovery.service
+swiss.trustbroker.api.idm.dto
+swiss.trustbroker.api.idm.service
+swiss.trustbroker.api.profileselection.dto
+swiss.trustbroker.api.profileselection.service
+swiss.trustbroker.api.relyingparty.dto
+swiss.trustbroker.api.saml.dto
+swiss.trustbroker.api.saml.service
+swiss.trustbroker.api.sessioncache.dto
+swiss.trustbroker.api.sessioncache.service

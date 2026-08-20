@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"swiss.trustbroker.samlmock"},{"l":"swiss.trustbroker.samlmock.controller"},{"l":"swiss.trustbroker.samlmock.dto"},{"l":"swiss.trustbroker.samlmock.service"}];updateSearchResults();

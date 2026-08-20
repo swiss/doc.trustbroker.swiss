@@ -1,0 +1,12 @@
+swiss.trustbroker.common.config
+swiss.trustbroker.common.dto
+swiss.trustbroker.common.exception
+swiss.trustbroker.common.oidc
+swiss.trustbroker.common.saml.dto
+swiss.trustbroker.common.saml.service
+swiss.trustbroker.common.saml.util
+swiss.trustbroker.common.server
+swiss.trustbroker.common.setup.config
+swiss.trustbroker.common.setup.service
+swiss.trustbroker.common.tracing
+swiss.trustbroker.common.util
