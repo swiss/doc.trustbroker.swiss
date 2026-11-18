@@ -438,7 +438,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>LDAP Store</h1>
 <div class="details">
-<span id="revnumber">version 1.15.0.20260817T134910Z</span>
+<span id="revnumber">version 1.16.0.20261109T110336Z</span>
 </div>
 </div>
 <div id="content">
@@ -459,7 +459,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>this plugin can only connect to one LDAP server</p>
+<p>only username/password authentication is supported for LDAP stores</p>
 </li>
 </ul>
 </div>
@@ -491,32 +491,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.urls</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">url to connect to the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL to connect to the LDAP server for a named store</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">ldaps://localhost:636</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">base DN</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">dc=trustbroker,dc=ch</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.usename</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">username used to query the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.authentication.username</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Username used to query the LDAP server</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">uid=admin,ou=system</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spring.ldap.password</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">password used to query the LDAP server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.authentication.password</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Password used to query the LDAP server</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
@@ -529,6 +521,38 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">true / false</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">false</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.network.backendConnectTimeoutSec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TCP connect timeout for the LDAP connection, in seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.network.backendResponseTimeoutSec</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Response timeout for LDAP operations, in seconds</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.pool.enabled</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables connection pooling for the store (reuses connections instead of opening one per query)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true / false</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>trustbroker.config.ldap.stores.&lt;name&gt;.pool.*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Pool tuning: maxTotalPerKey, maxIdlePerKey, minIdlePerKey, maxWaitSec, testWhileIdle, timeBetweenEvictionRunsSec, minEvictableIdleTimeSec</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">application.yml</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer / Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maxTotalPerKey: 5</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>appFilter</code></p></td>
@@ -642,8 +666,8 @@ Any additional information can be used (most probably LDAP attributes).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.15.0.20260817T134910Z<br>
-Last updated 2026-06-22 12:57:05 +0200
+Version 1.16.0.20261109T110336Z<br>
+Last updated 2026-11-10 10:50:33 +0100
 </div>
 </div>
 </body>

@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"swiss.trustbroker.ldap.model"},{"l":"swiss.trustbroker.ldap.service"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"swiss.trustbroker.ldap"},{"l":"swiss.trustbroker.ldap.model"},{"l":"swiss.trustbroker.ldap.service"},{"l":"swiss.trustbroker.ldap.util"}];updateSearchResults();

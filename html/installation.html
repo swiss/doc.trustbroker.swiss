@@ -438,7 +438,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Docker Installation</h1>
 <div class="details">
-<span id="revnumber">version 1.15.0.20260817T134910Z</span>
+<span id="revnumber">version 1.16.0.20261109T110336Z</span>
 </div>
 </div>
 <div id="content">
@@ -753,8 +753,8 @@ services:
     networks:
       - trustbroker-network
 
-  ldap:
-    container_name: ldap
+  ldap1:
+    container_name: ldap1
     image: osixia/openldap:latest
     ports:
       - '1389:389'
@@ -775,19 +775,50 @@ services:
       - ./ldap_init/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
       - ldap_data:/var/lib/ldap
       - ldap_config:/etc/ldap/slapd.d
+    networks:
+      - trustbroker-network
+
+  ldap2:
+    container_name: ldap2
+    image: osixia/openldap:latest
+    ports:
+      - '1390:389'
+      - '637:636'
+    command: --copy-service -l debug
+    environment:
+      - LDAP_TLS=false
+      - LDAP_BASE_DN=dc=trustbroker2,dc=ch
+      - LDAP_ORGANISATION=Trustbroker2
+      - LDAP_DOMAIN=trustbroker2.ch
+      - LDAP_ADMIN_PASSWORD=secret
+      - LDAP_CONFIG_PASSWORD=secret
+      - KEEP_EXISTING_CONFIG=false
+      - LDAP_REMOVE_CONFIG_AFTER_SETUP=false
+      - LDAP_LOG_LEVEL=64
+    volumes:
+      - ./ldap2_init/schema:/container/service/slapd/assets/config/bootstrap/schema/custom
+      - ./ldap2_init/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
+      - ldap2_data:/var/lib/ldap
+      - ldap2_config:/etc/ldap/slapd.d
+    networks:
+      - trustbroker-network
 
   # http://localhost:8099
-  # loginDN: cn=admin,dc=trustbroker,dc=ch  password: secret
+  # ldap1 loginDN: cn=admin,dc=trustbroker,dc=ch   password: secret
+  # ldap2 loginDN: cn=admin,dc=trustbroker2,dc=ch  password: secret
   phpldapadmin:
     image: osixia/phpldapadmin:stable
     container_name: phpldapadmin
     environment:
       - PHPLDAPADMIN_HTTPS=false
-      - PHPLDAPADMIN_LDAP_HOSTS=ldap
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap1,ldap2
     ports:
       - '8099:80'
     depends_on:
-      - ldap
+      - ldap1
+      - ldap2
+    networks:
+      - trustbroker-network
 
   trustbroker:
     container_name: trustbroker
@@ -796,7 +827,8 @@ services:
     depends_on:
       - gitea
       - postgresql
-      - ldap
+      - ldap1
+      - ldap2
     volumes:
       - ./ssh:/etc/trustbroker/keys:ro
       - /etc/localtime:/etc/localtime:ro
@@ -862,7 +894,9 @@ services:
 
 volumes:
   ldap_data:
-  ldap_config:</code></pre>
+  ldap_config:
+  ldap2_data:
+  ldap2_config:</code></pre>
 </div>
 </div>
 </div>
@@ -1024,8 +1058,8 @@ docker compose up
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.15.0.20260817T134910Z<br>
-Last updated 2026-08-13 13:22:50 +0200
+Version 1.16.0.20261109T110336Z<br>
+Last updated 2026-08-21 13:28:56 +0200
 </div>
 </div>
 </body>
